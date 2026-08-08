@@ -1,6 +1,6 @@
-# [Project name]
+# Agrisystems Community Food Access
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A white-led community food access MVP that helps households coordinate transparent group purchases from trusted agricultural suppliers.
 
 ## Run & Operate
 
@@ -22,23 +22,32 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/agrisystem-community/` — responsive React + Vite MVP
+- `artifacts/agrisystem-community/src/App.tsx` — client routes, demo data, and group-buy interactions
+- `artifacts/agrisystem-community/src/index.css` — Agrisystems visual theme and responsive styling
+- `attached_assets/agrosystem_logo-copy_1786259279741.jpeg` — supplied logo source asset
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The first release uses local demo data so the member and group-leader journeys can be validated before payment and identity integrations are added.
+- The product is organized around transparent community group purchases rather than a traditional individual shopping cart.
+- Group progress, contribution simulation, allocation preview, pickup details, and leader authorization are treated as first-class trust surfaces.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Discover active community group buys and see group pricing, savings, trust signals, and funding progress.
+- Browse and filter offers, join a group, adjust contribution quantity, and view a member group dashboard.
+- Review a group purchase detail page with allocation and pickup information.
+- Create a group and simulate funding and payment authorization from the leader workspace.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Use the supplied Agrisystems logo as the product logo and favicon.
+- Keep white as the primary color while deriving supporting colors from the supplied logo.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Demo contributions and payment authorization are intentionally simulated in the MVP and should be clearly distinguished from real payment flows when integrations are added.
 
 ## Pointers
 
