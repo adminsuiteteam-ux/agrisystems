@@ -2,6 +2,10 @@ import { type ReactNode, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation, useRoute } from 'wouter';
 import { ArrowRight, BarChart3, Check, ChevronRight, Clock3, Copy, Filter, Leaf, MapPin, Menu, Minus, Package, Plus, Search, ShieldCheck, ShoppingBasket, Sprout, Users, WalletCards, X } from 'lucide-react';
 import logo from '@assets/agrosystem_logo-copy_1786259279741.jpeg';
+import LandingPage from '@/pages/LandingPage';
+import DemoLoginPage from '@/pages/auth/DemoLoginPage';
+import { AuthProvider } from '@/auth/AuthContext';
+
 
 type Offer = { id: string; name: string; category: string; farm: string; location: string; unit: string; price: number; retail: number; joined: number; target: number; days: number; accent: string; pickup: string };
 const offers: Offer[] = [
@@ -16,7 +20,7 @@ const percent = (a: number, b: number) => Math.min(100, Math.round(a / b * 100))
 
 function Shell({ children }: { children: ReactNode }) {
   const [path] = useLocation(); const [open, setOpen] = useState(false);
-  const nav = [['/', 'Discover', Sprout], ['/browse', 'Browse offers', ShoppingBasket], ['/groups', 'My groups', Users], ['/leader', 'Leader workspace', BarChart3]] as const;
+  const nav = [['/discover', 'Discover', Sprout], ['/browse', 'Browse offers', ShoppingBasket], ['/groups', 'My groups', Users], ['/leader', 'Leader workspace', BarChart3]] as const;
   return <div className="app-noise min-h-[100dvh]">
     <header className="sticky top-0 z-40 border-b border-[#e6dfd2] bg-[#fffefa]/95 backdrop-blur-md"><div className="mx-auto flex h-[74px] max-w-[1320px] items-center justify-between px-5 lg:px-8">
       <Link href="/" data-testid="link-logo" className="flex items-center gap-3"><img src={logo} alt="Agrisystems Development" className="h-[53px] w-[66px] object-cover object-top" /><div className="hidden leading-none sm:block"><div className="font-display text-[17px] font-extrabold tracking-[-.04em] text-[#124d31]">AGRISYSTEMS</div><div className="mt-1 text-[8px] font-bold tracking-[.23em] text-[#739832]">COMMUNITY FOOD ACCESS</div></div></Link>
@@ -46,5 +50,65 @@ function Detail({ toast }: { toast: (s: string) => void }) { const [, params] = 
 
 function Leader({ toast }: { toast: (s: string) => void }) { const [create, setCreate] = useState(false); const [authorized, setAuthorized] = useState(false); return <Frame title={<>Turn neighbours into a <span className="text-[#4e9149]">shared order.</span></>} subtitle="Start a group from any offer, invite your community, and keep the funding picture clear."><button onClick={() => setCreate(true)} data-testid="button-create-group" className="mt-9 flex items-center gap-2 rounded-xl bg-[#1c6039] px-5 py-3.5 text-sm font-bold text-white"><Plus size={17} />Create a new group</button><div className="mt-10 grid gap-5 sm:grid-cols-3">{[['Active groups', '2'], ['Households reached', '68'], ['Community savings', '₦14,250']].map(([a, b]) => <div key={a} className="rounded-2xl border border-[#e7dfd2] bg-[#fffefa] p-5"><div className="text-xs text-[#7a877d]">{a}</div><div className="mt-3 font-display text-3xl font-extrabold text-[#1d5e39]">{b}</div></div>)}</div><div className="mt-10 overflow-hidden rounded-2xl border border-[#e7dfd2] bg-[#fffefa]"><div className="border-b border-[#eee8dd] p-5"><p className="font-mono text-xs uppercase tracking-[.15em] text-[#b17a2d]">Needs your attention</p><h2 className="mt-1 font-display text-2xl font-extrabold text-[#285d3c]">Open group orders</h2></div>{[['Ofada Rice', 74, false], ['Dried Pepper Mix', 100, true]].map(([name, p, ready]) => <div key={name as string} className="flex flex-col gap-4 border-b border-[#eee8dd] p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-4"><Package className="text-[#4c914e]" /><div><h3 className="font-display font-extrabold text-[#315d3d]">{name}</h3><p className="text-xs text-[#89938a]">Bodija Community · closes soon</p></div></div><div className="flex items-center gap-4"><div className="w-36"><div className="mb-1 text-right text-[10px] text-[#4b884a]">{p}%</div><div className="h-2 rounded-full bg-[#e5eee1]"><div className="h-full rounded-full bg-[#589850]" style={{ width: `${p}%` }} /></div></div>{ready ? <button disabled={authorized} onClick={() => { setAuthorized(true); toast('Payment authorization simulated.'); }} data-testid="button-authorize-payment" className="rounded-xl bg-[#b17b2d] px-3 py-2.5 text-xs font-bold text-white">{authorized ? <><Check className="mr-1 inline" size={14} />Authorized</> : 'Authorize payment'}</button> : <span className="text-xs text-[#9aa29b]">Collecting contributions</span>}</div></div>)}</div>{create && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#173a28]/30 p-5 backdrop-blur-sm"><div className="w-full max-w-lg rounded-3xl bg-[#fffefa] p-6"><div className="flex justify-between"><div><p className="font-mono text-xs uppercase text-[#b17a2d]">New community group</p><h2 className="mt-1 font-display text-2xl font-extrabold text-[#285d3c]">Set it up in a minute.</h2></div><button onClick={() => setCreate(false)} data-testid="button-close-create-group"><X /></button></div><label className="mt-6 block text-sm font-semibold text-[#526b58]">Choose an offer<select data-testid="select-group-offer" className="mt-2 w-full rounded-xl border border-[#d8e2d4] bg-[#f7faf5] p-3"><option>Ofada Rice</option><option>Honey Beans</option><option>New Yam Basket</option></select></label><label className="mt-4 block text-sm font-semibold text-[#526b58]">Group name<input data-testid="input-group-name" defaultValue="Bodija Neighbours Pantry" className="mt-2 w-full rounded-xl border border-[#d8e2d4] bg-[#f7faf5] p-3" /></label><button onClick={() => { setCreate(false); toast('New group created. Share it with your neighbours.'); }} data-testid="button-submit-create-group" className="mt-6 w-full rounded-xl bg-[#1c6039] py-3 font-bold text-white">Create group</button></div></div>}</Frame>; }
 
-function App() { const [join, setJoin] = useState<Offer | null>(null); const [note, setNote] = useState(''); const toast = (s: string) => { setNote(s); window.setTimeout(() => setNote(''), 3000); }; return <Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Shell><Switch><Route path="/" component={() => <Home onJoin={setJoin} />} /><Route path="/browse" component={() => <Browse onJoin={setJoin} />} /><Route path="/groups" component={Groups} /><Route path="/groups/:id" component={() => <Detail toast={toast} />} /><Route path="/leader" component={() => <Leader toast={toast} />} /><Route component={() => <Frame title="This path hasn’t been planted yet." subtitle="The page you requested does not exist."><Link href="/" className="mt-7 inline-flex rounded-xl bg-[#1c6039] px-5 py-3 text-sm font-bold text-white">Back to discover</Link></Frame>} /></Switch>{join && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#173a28]/30 p-5 backdrop-blur-sm"><div className="w-full max-w-md rounded-3xl bg-[#fffefa] p-6"><div className="flex justify-between"><div><p className="font-mono text-xs uppercase text-[#b17a2d]">Join group buy</p><h2 className="mt-1 font-display text-2xl font-extrabold text-[#285d3c]">{join.name}</h2></div><button onClick={() => setJoin(null)} data-testid="button-close-join"><X /></button></div><p className="mt-4 text-sm leading-6 text-[#718078]">Join at the farm-direct price of <strong>{money(join.price)}</strong> per {join.unit}. Demo only.</p><button onClick={() => { setJoin(null); toast(`You joined ${join.name}. Welcome to the group.`); }} data-testid="button-confirm-join" className="mt-6 w-full rounded-xl bg-[#1c6039] py-3.5 font-bold text-white">Join this group</button></div></div>}{note && <div data-testid="status-toast" className="fixed bottom-5 left-1/2 z-[60] flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#174f34] px-4 py-3 text-sm font-semibold text-white shadow-xl"><Check size={16} />{note}</div>}</Shell></Router>; }
+function App() {
+  const [join, setJoin] = useState<Offer | null>(null);
+  const [note, setNote] = useState('');
+  const toast = (s: string) => { setNote(s); window.setTimeout(() => setNote(''), 3000); };
+
+  return (
+    <AuthProvider>
+      <Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+        <Switch>
+          {/* ── Public marketing pages ── */}
+          <Route path="/" component={LandingPage} />
+          <Route path="/login" component={DemoLoginPage} />
+
+          {/* ── Authenticated app (Shell wrapper) ── */}
+          <Route>
+            <Shell>
+              <Switch>
+                <Route path="/discover" component={() => <Home onJoin={setJoin} />} />
+                <Route path="/browse"   component={() => <Browse onJoin={setJoin} />} />
+                <Route path="/groups"   component={Groups} />
+                <Route path="/groups/:id" component={() => <Detail toast={toast} />} />
+                <Route path="/leader"   component={() => <Leader toast={toast} />} />
+                <Route component={() => (
+                  <Frame title="This path hasn't been planted yet." subtitle="The page you requested does not exist.">
+                    <Link href="/" className="mt-7 inline-flex rounded-xl bg-[#1c6039] px-5 py-3 text-sm font-bold text-white">
+                      Back to home
+                    </Link>
+                  </Frame>
+                )} />
+              </Switch>
+
+              {/* Join modal */}
+              {join && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#173a28]/30 p-5 backdrop-blur-sm">
+                  <div className="w-full max-w-md rounded-3xl bg-[#fffefa] p-6">
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="font-mono text-xs uppercase text-[#b17a2d]">Join group buy</p>
+                        <h2 className="mt-1 font-display text-2xl font-extrabold text-[#285d3c]">{join.name}</h2>
+                      </div>
+                      <button onClick={() => setJoin(null)} data-testid="button-close-join"><X /></button>
+                    </div>
+                    <p className="mt-4 text-sm leading-6 text-[#718078]">Join at the farm-direct price of <strong>{money(join.price)}</strong> per {join.unit}. Demo only.</p>
+                    <button onClick={() => { setJoin(null); toast(`You joined ${join.name}. Welcome to the group.`); }} data-testid="button-confirm-join" className="mt-6 w-full rounded-xl bg-[#1c6039] py-3.5 font-bold text-white">Join this group</button>
+                  </div>
+                </div>
+              )}
+
+              {/* Toast */}
+              {note && (
+                <div data-testid="status-toast" className="fixed bottom-5 left-1/2 z-[60] flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#174f34] px-4 py-3 text-sm font-semibold text-white shadow-xl">
+                  <Check size={16} />{note}
+                </div>
+              )}
+            </Shell>
+          </Route>
+        </Switch>
+      </Router>
+    </AuthProvider>
+  );
+}
 export default App;
