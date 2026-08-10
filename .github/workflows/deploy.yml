@@ -1,0 +1,41 @@
+name: Deploy Agrisystems App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm --filter @workspace/agrisystem-community run build
+
+      - name: Add 404.html fallback for SPA routing
+        run: cp artifacts/agrisystem-community/dist/public/index.html artifacts/agrisystem-community/dist/public/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: artifacts/agrisystem-community/dist/public
+          branch: gh-pages
