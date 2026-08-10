@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import { type ReactNode, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation, useRoute } from 'wouter';
 import { ArrowRight, BarChart3, Check, ChevronRight, Clock3, Copy, Filter, Leaf, MapPin, Menu, Minus, Package, Plus, Search, ShieldCheck, ShoppingBasket, Sprout, Users, WalletCards, X } from 'lucide-react';

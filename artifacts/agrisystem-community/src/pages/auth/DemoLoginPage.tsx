@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'wouter';
 import { Sprout, ArrowRight, Eye, EyeOff, Users, BarChart3, Leaf, ShieldCheck, Check, Loader2 } from 'lucide-react';

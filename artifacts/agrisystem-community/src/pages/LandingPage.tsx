@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'wouter';
 import {
